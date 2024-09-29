@@ -49,6 +49,8 @@
 
 #define MAX_PRINT_LEN 1000
 
+extern char * nameStrPtr; // so we can print the name string
+
 static volatile bool isRTCExpired = false;
 static volatile bool changeTempSamplingRate = false;
 static volatile bool isUSARTTxComplete = true;
@@ -387,14 +389,15 @@ int main ( void )
             isRTCExpired = false;
             isUSARTTxComplete = false;
             
-            uint32_t numPointsMax = 20;
+            uint32_t numPointsMax = 40;
             uint32_t pointsScored = numPointsMax * totalPassCount / totalTests;
             
             snprintf((char*)uartTxBuffer, MAX_PRINT_LEN,
-                    "========= ALL TESTS COMPLETE, Post-test Idle Cycle Number: %ld\r\n"
+                    "========= %s: ALL TESTS COMPLETE, Post-test Idle Cycle Number: %ld\r\n"
                     "Summary of tests: %ld of %ld tests passed\r\n"
                     "Final score for test cases: %ld of %ld points\r\n"
                     "\r\n",
+                    nameStrPtr,
                     idleCount, 
                     totalPassCount, totalTests,
                     pointsScored, numPointsMax); 
