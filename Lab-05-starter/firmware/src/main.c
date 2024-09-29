@@ -346,10 +346,9 @@ int main ( void )
             isRTCExpired = false;
             isUSARTTxComplete = false;
             
-            extern uint32_t quotient;
-            mod = 0xDEADBEEF;
+            // force bad values to detect mem not written
+            mod = dividend = quotient = divisor = 0xDEADBEEF;
             we_have_a_problem = 0XD000000D;
-
             
             // set the dividend in r0
             uint32_t myDividend = tc[testCase][0];
