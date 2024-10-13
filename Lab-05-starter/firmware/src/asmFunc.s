@@ -14,7 +14,7 @@
 .type nameStr,%gnu_unique_object
     
 /*** STUDENTS: Change the next line to your name!  **/
-nameStr: .asciz "Inigo Montoya"  
+nameStr: .asciz "Mark Desens"  
 
 .align   /* realign so that next mem allocations are on word boundaries */
  
@@ -81,6 +81,99 @@ asmFunc:
     
     /*** STUDENTS: Place your code BELOW this line!!! **************/
 
+    /* START - INITIALIZE VARIABLES TO 0 */
+    
+    // Used to initialize variales to 0
+    MOVS r4, 0
+    
+    // Load the address where the value is stored to a register.
+    LDR r5, =dividend 
+    // Set value to unsigned input value (r0 per instructions)
+    STR r0, [r5] 
+    // Set register with value that will be used for the given variable
+    LDR r5, [r5]
+    
+    // Load the address where the value is stored to a register.
+    LDR r6, =divisor 
+    // Set value to unsigned input value (r1 per instructions)
+    STR r1, [r6] 
+    // Set register with value that will be used for the given variable
+    LDR r6, [r6]
+    
+    // Load the address where the value is stored to a register.
+    LDR r7, =quotient 
+    // Set value to 0
+    STR r4, [r7] 
+            
+    // Load the address where the value is stored to a register.
+    LDR r8, =mod 
+    // Set value to 0
+    STR r4, [r8] 
+            
+    // Load the address where the value is stored to a register.
+    LDR r9, =we_have_a_problem 
+    // Set value to 0
+    STR r4, [r9] 
+    
+    /* END - INITIALIZE VARIABLES TO 0 */
+    
+    /* START - MAIN LOGIC */
+    
+    // Validate that dividend and divisor are not 0
+    // Compare dividend to 0
+    CMP r5, 0
+    // If dividend is equal to zero then branch to error_found
+    BEQ error_found
+
+    // Compare divisor to 0
+    CMP r6, 0
+    // If dividend is equal to zero then branch to error_found
+    BEQ error_found	
+    
+    // Perform division-by-subtraction
+    division_by_subtraction:
+	// branch if the dividend is less than the divisor
+	CMP r5, r6
+	BLO final_code
+	// subtract the divisor from the dividend
+	SUBS r5, r5, r6
+	// add 1 to the quotient
+	LDR r10, [r7]
+	ADDS r10, r10, 1
+	STR r10, [r7]
+	// loop - branch back to start of division_by_subtraction
+	B division_by_subtraction
+	
+    
+    /* END - MAIN LOGIC */
+     
+       
+    
+/* START - BRANCHES */
+
+// runs last for non-happy path
+error_found:
+    // we_have_a_problem should be set to 1 (true) since an error was encountered
+    LDR r10, =1
+    STR r10, [r9]
+    // Per instructions, set r0 to the address of the quotient
+    LDR r0, =quotient
+    B done
+    
+// runs last for happy path    
+final_code:
+    // set mod
+    STR r5, [r8]
+    // we_have_a_problem should be set to 0 (false) since there were no errors
+    LDR r10, =0
+    STR r10, [r9]
+    // Per instructions, set r0 to the result of the division calculation (i.e., quotient)
+    LDR r0, =quotient
+    B done
+
+
+/* END - BRANCHES */
+    
     
     /*** STUDENTS: Place your code ABOVE this line!!! **************/
 
